@@ -3,6 +3,7 @@ package ganea.alexandra.userdetailsapp;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        showFragment(new UserListFragment());
     }
 
     @Override
@@ -97,5 +100,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void showFragment(Fragment fragment) {
+        if (findViewById(R.id.content_container) != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_container, fragment, fragment.getClass().getName()).commit();
+        }
     }
 }

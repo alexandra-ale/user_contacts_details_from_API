@@ -18,11 +18,11 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />-->
 
-    <android.support.v7.widget.RecyclerView
+    <FrameLayout
+        android:id="@+id/content_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:listitem="@layout/user_item_in_list" />
+        android:layout_height="wrap_content"/>
 
 </android.support.constraint.ConstraintLayout>
