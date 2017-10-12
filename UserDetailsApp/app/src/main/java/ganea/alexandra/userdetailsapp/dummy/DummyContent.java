@@ -1,6 +1,5 @@
 package ganea.alexandra.userdetailsapp.dummy;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import ganea.alexandra.userdetailsapp.AppConstants;
+import ganea.alexandra.userdetailsapp.utils.AppConstants;
 import ganea.alexandra.userdetailsapp.entities.ItemUser;
 import ganea.alexandra.userdetailsapp.entities.ItemUserId;
 import ganea.alexandra.userdetailsapp.entities.ItemUserLocation;
@@ -64,7 +63,7 @@ public class DummyContent {
         location.setStreet("Street " + position);
         location.setCity("City " + position);
         location.setState("State " + position);
-        location.setPostcode(Long.parseLong(String.valueOf(position)));
+        location.setPostcode(String.valueOf(position));
         user.setLocation(location);
 
         user.setEmail("email" + position + "@email.com");

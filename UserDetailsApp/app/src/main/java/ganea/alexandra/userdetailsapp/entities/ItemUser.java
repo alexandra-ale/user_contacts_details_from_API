@@ -21,7 +21,7 @@ public class ItemUser implements Serializable {
     private ItemUserPicture picture;
     private String nat;
 
-    private boolean faved;
+    private boolean faved = false;
 
     public String getGender() {
         return gender;

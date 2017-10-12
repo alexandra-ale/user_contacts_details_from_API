@@ -11,7 +11,7 @@ public class ItemUserLocation implements Serializable {
     private String street;
     private String city;
     private String state;
-    private Long postcode;
+    private String postcode;
 
     public String getStreet() {
         return street;
@@ -37,11 +37,11 @@ public class ItemUserLocation implements Serializable {
         this.state = state;
     }
 
-    public Long getPostcode() {
+    public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(Long postcode) {
+    public void setPostcode(String postcode) {
         this.postcode = postcode;
     }
 }

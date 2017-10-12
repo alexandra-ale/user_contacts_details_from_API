@@ -1,11 +1,9 @@
-package ganea.alexandra.userdetailsapp;
+package ganea.alexandra.userdetailsapp.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,9 +11,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.util.ArrayList;
+
+import ganea.alexandra.userdetailsapp.R;
+import ganea.alexandra.userdetailsapp.entities.ItemUser;
+import ganea.alexandra.userdetailsapp.ui.user_list.UserListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public static ArrayList<ItemUser> USER_ITEMS = new ArrayList<ItemUser>();
+    private static int nextPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package ganea.alexandra.userdetailsapp;
+package ganea.alexandra.userdetailsapp.ui.user_list;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
 import java.util.List;
 
+import ganea.alexandra.userdetailsapp.R;
 import ganea.alexandra.userdetailsapp.entities.ItemUser;
 
 public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> {

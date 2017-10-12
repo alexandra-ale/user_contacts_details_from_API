@@ -1,4 +1,4 @@
-package ganea.alexandra.userdetailsapp;
+package ganea.alexandra.userdetailsapp.utils;
 
 /**
  * Created by azingangaale on 10/12/2017.
