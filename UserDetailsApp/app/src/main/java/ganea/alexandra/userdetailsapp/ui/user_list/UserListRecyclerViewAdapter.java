@@ -1,6 +1,7 @@
 package ganea.alexandra.userdetailsapp.ui.user_list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -16,10 +17,20 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import ganea.alexandra.userdetailsapp.R;
 import ganea.alexandra.userdetailsapp.entities.ItemUser;
+import ganea.alexandra.userdetailsapp.ui.user_detail.UserDetailsActivity;
+import ganea.alexandra.userdetailsapp.utils.AppConstants;
+
+import static java.util.Calendar.DATE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> {
 
@@ -41,15 +52,27 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameTextView.setText(mValues.get(position).getName().getTitle()
-                + " " + mValues.get(position).getName().getFirst()
-                + " " + mValues.get(position).getName().getLast());
-        holder.mAgeNatTextView.setText(mValues.get(position).getDob()
-                + " from " + mValues.get(position).getNat());
+        holder.mNameTextView.setText(capitalize(mValues.get(position).getName().getTitle())
+                + " " + capitalize(mValues.get(position).getName().getFirst())
+                + " " + capitalize(mValues.get(position).getName().getLast()));
+        Date currentDate = Calendar.getInstance().getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss", Locale.US);
+        try {
+            Date dob = dateFormat.parse(holder.mItem.getDob());
+            int years = getDiffYears(dob, currentDate);
+            holder.mAgeNatTextView.setText(years + " years old from " + mValues.get(position).getNat());
+        } catch (Exception e) {
+            e.printStackTrace();
+            holder.mAgeNatTextView.setText(" from " + mValues.get(position).getNat());
+        }
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mContext, UserDetailsActivity.class);
+                intent.putExtra(AppConstants.CURRENT_USER_POSITION, position);
+                mContext.startActivity(intent);
             }
         });
 
@@ -61,12 +84,33 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
             }
         });
 
-        String path = holder.mItem.getPicture().getThumbnail();
-        if (path == null || path.isEmpty()){
+        String path = holder.mItem.getPicture().getMedium();
+        if (path == null || path.isEmpty()) {
             path = "error";
         }
         setProfileImage(path, holder.mUserImageView);
         setFavImage(holder.mItem.getFaved(), holder.mFaveImageView);
+    }
+
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    private static int getDiffYears(Date first, Date last) {
+        Calendar a = getCalendar(first);
+        Calendar b = getCalendar(last);
+        int diff = b.get(YEAR) - a.get(YEAR);
+        if (a.get(MONTH) > b.get(MONTH) ||
+                (a.get(MONTH) == b.get(MONTH) && a.get(DATE) > b.get(DATE))) {
+            diff--;
+        }
+        return diff;
+    }
+
+    private static Calendar getCalendar(Date date) {
+        Calendar cal = Calendar.getInstance(Locale.US);
+        cal.setTime(date);
+        return cal;
     }
 
     @Override
@@ -124,14 +168,6 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .placeholder(R.drawable.black_star)
                         .error(R.drawable.black_star))
-                .into(new BitmapImageViewTarget(imageView) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(mContext.getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        imageView.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+                .into(imageView);
     }
 }

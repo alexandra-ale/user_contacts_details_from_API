@@ -42,7 +42,6 @@ public class UserListFragment extends Fragment {
     public static UserListFragment newInstance() {
         UserListFragment fragment = new UserListFragment();
         Bundle args = new Bundle();
-//        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -70,7 +69,6 @@ public class UserListFragment extends Fragment {
                 @Override
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     // Triggered only when new data needs to be appended to the list
-                    // Add whatever code is needed to append new items to the bottom of the list
                     if (page < 3) {
                         loadNextDataFromApi(page);
                     }
@@ -79,15 +77,7 @@ public class UserListFragment extends Fragment {
             // Adds the scroll listener to RecyclerView
             recyclerView.addOnScrollListener(scrollListener);
 
-
             // Append the next page of data into the adapter
-            // This method probably sends out a network request and appends new data items to your adapter.
-
-            /*GetPaginatedUsers paginatedUsers = new GetPaginatedUsers();
-            paginatedUsers.setPage(((MainActivity)getActivity()).getWhichIsNextPage());
-            paginatedUsers.setResults(100);
-            paginatedUsers.setSeed("abc");
-            ApiCalls.getInstance(getContext().getApplicationContext()).getPaginatedUsersCall(paginatedUsers, mGetUsersListener);*/
             loadNextDataFromApi(((MainActivity) getActivity()).getWhichIsNextPage());
         }
         return view;
@@ -107,6 +97,11 @@ public class UserListFragment extends Fragment {
         ApiCalls.getInstance(getContext().getApplicationContext()).getPaginatedUsersCall(paginatedUsers, mGetUsersListener);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
 
     OnCallbackEventListener mGetUsersListener = new OnCallbackEventListener() {
         @Override
