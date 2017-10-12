@@ -30,6 +30,7 @@ public class UserListFragment extends Fragment {
 
     private EndlessRecyclerViewScrollListener scrollListener;
     private RecyclerView recyclerView;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -70,7 +71,9 @@ public class UserListFragment extends Fragment {
                 public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                     // Triggered only when new data needs to be appended to the list
                     // Add whatever code is needed to append new items to the bottom of the list
-                    loadNextDataFromApi(page);
+                    if (page < 3) {
+                        loadNextDataFromApi(page);
+                    }
                 }
             };
             // Adds the scroll listener to RecyclerView
@@ -80,12 +83,12 @@ public class UserListFragment extends Fragment {
             // Append the next page of data into the adapter
             // This method probably sends out a network request and appends new data items to your adapter.
 
-            GetPaginatedUsers paginatedUsers = new GetPaginatedUsers();
-            paginatedUsers.setPage(0);
+            /*GetPaginatedUsers paginatedUsers = new GetPaginatedUsers();
+            paginatedUsers.setPage(((MainActivity)getActivity()).getWhichIsNextPage());
             paginatedUsers.setResults(100);
             paginatedUsers.setSeed("abc");
-            ApiCalls.getInstance(getContext().getApplicationContext()).getPaginatedUsersCall(paginatedUsers, mGetUsersListener);
-
+            ApiCalls.getInstance(getContext().getApplicationContext()).getPaginatedUsersCall(paginatedUsers, mGetUsersListener);*/
+            loadNextDataFromApi(((MainActivity) getActivity()).getWhichIsNextPage());
         }
         return view;
     }
@@ -96,6 +99,12 @@ public class UserListFragment extends Fragment {
         //  --> Deserialize and construct new model objects from the API response
         //  --> Append the new data objects to the existing set of items inside the array of items
         //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        ((MainActivity) getActivity()).showHideProgressBar(true);
+        GetPaginatedUsers paginatedUsers = new GetPaginatedUsers();
+        paginatedUsers.setPage(offset);
+        paginatedUsers.setResults(100);
+        paginatedUsers.setSeed("abc");
+        ApiCalls.getInstance(getContext().getApplicationContext()).getPaginatedUsersCall(paginatedUsers, mGetUsersListener);
     }
 
 
@@ -109,6 +118,9 @@ public class UserListFragment extends Fragment {
             MainActivity.USER_ITEMS.addAll(getUsers.getUsers());
             recyclerView.getAdapter().notifyItemRangeInserted(posStart, MainActivity.USER_ITEMS.size());
 
+            ((MainActivity) getActivity()).increaseNextPage();
+            ((MainActivity) getActivity()).showHideProgressBar(false);
+
             /*Intent intent = new Intent(MainActivity.this, ManageData.class);
             intent.setAction(ManageData.ACTION_SAVE_CONDIMENTS);
             intent.putExtra(ManageData.EXTRA_PARAM1, "condiments");
@@ -118,11 +130,13 @@ public class UserListFragment extends Fragment {
         @Override
         public void onFailResponse(JSONObject response, String url) {
             Log.e(this.getClass().getSimpleName(), "FAIL " + response.toString());
+            ((MainActivity) getActivity()).showHideProgressBar(false);
         }
 
         @Override
         public void onErrorEvent(String error, String url) {
             Log.e(this.getClass().getSimpleName(), "ERROR " + error);
+            ((MainActivity) getActivity()).showHideProgressBar(false);
         }
     };
 }

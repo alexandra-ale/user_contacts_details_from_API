@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity
 
     public static ArrayList<ItemUser> USER_ITEMS = new ArrayList<ItemUser>();
     private static int nextPage = 0;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        progressBar = (ProgressBar) findViewById(R.id.reload);
 
         showFragment(new UserListFragment());
     }
@@ -114,6 +118,22 @@ public class MainActivity extends AppCompatActivity
         if (findViewById(R.id.content_container) != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_container, fragment, fragment.getClass().getName()).commit();
+        }
+    }
+
+    public int getWhichIsNextPage(){
+        return nextPage;
+    }
+
+    public void increaseNextPage() {
+        nextPage++;
+    }
+
+    public void showHideProgressBar(boolean shouldBeVisible){
+        if (shouldBeVisible){
+            progressBar.setVisibility(View.VISIBLE);
+        } else  {
+            progressBar.setVisibility(View.GONE);
         }
     }
 }
